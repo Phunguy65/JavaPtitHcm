@@ -1,12 +1,13 @@
 package org.ptithcmcode;
 
+
 import java.text.DateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
  * J05006:
- * @author PNguyen 
+ * @author PNguyen
  * Một nhân viên làm việc trong công ty được lưu lại các thông tin sau:
  *
  *     Mã nhân viên: được gán tự động tăng, bắt đầu từ 00001
@@ -19,50 +20,52 @@ import java.util.Date;
  *
  * Viết chương trình nhập danh sách nhân viên (không nhập mã) trong đó có sử dụng chồng toán tử nhập/xuất và in ra màn hình danh sách vừa nhập. 
  */
-public class J05006 {
-    
+public class J05007 {
+
     public static void main(String[] args) {
-        java.util.Scanner sc = new java.util.Scanner(System.in);
-        
-        int t = Integer.parseInt(sc.nextLine());
-        
-        while(t-- > 0) {
-            EmployeeV3 employee = new EmployeeV3(sc.nextLine(), sc.nextLine(), sc.nextLine(), sc.nextLine(), sc.nextLine(), sc.nextLine());
-            System.out.println(employee);
+        try(java.util.Scanner sc = new java.util.Scanner(System.in)) {
+            int t = Integer.parseInt(sc.nextLine());
+
+            java.util.List<EmployeeV6> employees = new java.util.ArrayList<>();
+            
+            while(t-- > 0) {
+                EmployeeV6 employee = new EmployeeV6(sc.nextLine(), sc.nextLine(), sc.nextLine(), sc.nextLine(), sc.nextLine(), sc.nextLine());
+                employees.add(employee);
+            }
+            
+            employees.stream().sorted().forEach(System.out::println);
         }
-        
-        sc.close();
     }
 }
 
-class EmployeeV3{
+class EmployeeV6 implements Comparable<EmployeeV6> {
     private static int count = 0;
-    
+
     private String id;
-    
+
     private String name;
-    
+
     private String sex;
-    
+
     private String dob;
-    
+
     private String address;
-    
+
     private String taxCode;
-    
+
     private String contractDate;
 
     {
         count++;
-        
+
         if(count < 10) {
             id = "0000" + count;
         } else if(count < 100) {
             id = "000" + count;
         }
     }
-    
-    public EmployeeV3(String name, String sex, String dob, String address, String taxCode, String contractDate) {
+
+    public EmployeeV6(String name, String sex, String dob, String address, String taxCode, String contractDate) {
         this.name = name;
         this.sex = sex;
         this.dob = dob;
@@ -71,6 +74,19 @@ class EmployeeV3{
         this.contractDate = contractDate;
     }
     
+    public Date getDob() {
+        try{
+            return new java.text.SimpleDateFormat("dd/MM/yyyy").parse(dob);
+        } catch(Exception e) {
+            return null;
+        }
+    }
+    
+    @Override
+    public int compareTo(EmployeeV6 o) {
+        return getDob().compareTo(o.getDob());
+    }
+
     @Override
     public String toString() {
         return id + " " + name + " " + sex + " " + dob + " " + address + " " + taxCode + " " + contractDate;
